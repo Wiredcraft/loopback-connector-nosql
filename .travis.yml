@@ -9,6 +9,9 @@ node_js:
   - "6"
   - "5"
   - "4"
+services:
+  - couchdb
+  - redis-server
 install:
   - npm install
 before_script:
