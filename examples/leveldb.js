@@ -55,25 +55,40 @@ class LevelDB extends NoSQL {
 class LevelDBAccessor extends Accessor {
 
   /**
-   * Save data to DB with a given id.
-   *
-   * Result is a promise with `[id, rev]` or an error.
-   */
-  saveWithId(id, data, options) {
-    return this.connection.call('putAsync', id, data, options).return([id, null]);
-  }
-
-  /**
    * Save data to DB without a given id.
    *
    * Result is a promise with `[id, rev]` or an error.
    */
-  saveWithoutId(data, options) {
+  postWithoutId(data, options) {
     // Generate ID.
     // Only works for the tests.
     const now = moment();
     const id = now.second() * 1000000 + now.millisecond() * 1000 + Math.floor(Math.random() * 1000);
-    return this.saveWithId(id, data, options);
+    return this.postWithId(id, data, options);
+  }
+
+  /**
+   * Save data to DB with a given id.
+   *
+   * Result is a promise with `[id, rev]` or an error.
+   */
+  postWithId(id, data, options) {
+    return this.exists(id).then((exists) => {
+      // To satisfy the tests from `loopback-datasource-juggler`.
+      if (exists) {
+        return Promise.reject(httpError(409, 'Conflict: duplicate id'));
+      }
+      return this.connection.call('putAsync', id, data, options).return([id, null]);
+    });
+  }
+
+  /**
+   * Save data to DB with a given id.
+   *
+   * Result is a promise with `[id, rev]` or an error.
+   */
+  putWithId(id, data, options) {
+    return this.connection.call('putAsync', id, data, options).return([id, null]);
   }
 
   /**
@@ -81,8 +96,10 @@ class LevelDBAccessor extends Accessor {
    *
    * Result is a promise with whatever or an error.
    */
-  destroyById(id, data, options) {
-    return this.connection.call('delAsync', id, options);
+  destroyById(id, options) {
+    return this.findById(id, options).then(() => {
+      return this.connection.call('delAsync', id, options);
+    }).return(true).catchReturn(false);
   }
 
   /**
@@ -117,6 +134,13 @@ class LevelDBAccessor extends Accessor {
     }).map((res) => {
       return [res.key, res.value];
     });
+  }
+
+  /**
+   * Helper.
+   */
+  exists(id, options) {
+    return this.connection.call('getAsync', id).then(Boolean).catchReturn(false);
   }
 
   /**

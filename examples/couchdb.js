@@ -70,11 +70,24 @@ class CouchDB extends NoSQL {
 class CouchDBAccessor extends Accessor {
 
   /**
+   * Save data to DB without a given id.
+   *
+   * Result is a promise with `[id, rev]` or an error.
+   */
+  postWithoutId(data, options) {
+    // Generate ID.
+    // Only works for the tests.
+    const now = moment();
+    const id = now.second() * 1000000 + now.millisecond() * 1000 + Math.floor(Math.random() * 1000);
+    return this.postWithId(id, data, options);
+  }
+
+  /**
    * Save data to DB with a given id.
    *
    * Result is a promise with `[id, rev]` or an error.
    */
-  saveWithId(id, data, options) {
+  postWithId(id, data, options) {
     const _id = this.modelName + ':' + id;
     // Force PUT.
     options = Object.assign({ docName: _id }, options || {});
@@ -82,27 +95,27 @@ class CouchDBAccessor extends Accessor {
     if (data._id != null) {
       delete data._id;
     }
-    return this.getRev(id, data).then((_rev) => {
-      if (_rev) {
-        data._rev = _rev;
+    return this.connection.call('insertAsync', data, options).then((res) => {
+      return [id, res.rev];
+    }).catch((err) => {
+      // To satisfy the tests from `loopback-datasource-juggler`.
+      err = httpError(err);
+      if (err.statusCode === 409) {
+        err.message = 'Conflict: duplicate id';
       }
-      return this.connection.call('insertAsync', data, options).then((res) => {
-        return [id, res.rev];
-      });
+      throw err;
     });
   }
 
   /**
-   * Save data to DB without a given id.
+   * Save data to DB with a given id.
    *
    * Result is a promise with `[id, rev]` or an error.
    */
-  saveWithoutId(data, options) {
-    // Generate ID.
-    // Only works for the tests.
-    const now = moment();
-    const id = now.second() * 1000000 + now.millisecond() * 1000 + Math.floor(Math.random() * 1000);
-    return this.saveWithId(id, data, options);
+  putWithId(id, data, options) {
+    return this.ensureRev(id, data).then((_data) => {
+      return this.postWithId(id, _data, options);
+    });
   }
 
   /**
@@ -110,11 +123,11 @@ class CouchDBAccessor extends Accessor {
    *
    * Result is a promise with whatever or an error.
    */
-  destroyById(id, data, options) {
+  destroyById(id, options) {
     const _id = this.modelName + ':' + id;
-    return this.getRev(id, data).then((_rev) => {
-      return this.connection.call('destroyAsync', _id, _rev);
-    });
+    return this.findById(id).then((data) => {
+      return this.connection.call('destroyAsync', _id, data._rev);
+    }).return(true).catchReturn(false);
   }
 
   /**
@@ -181,11 +194,14 @@ class CouchDBAccessor extends Accessor {
   /**
    * Helper.
    */
-  getRev(id, data) {
+  ensureRev(id, data) {
     if (data._rev != null) {
-      return Promise.resolve(data._rev);
+      return Promise.resolve(data);
     }
-    return this.findById(id).get('_rev').catchReturn(null);
+    return this.findById(id).then((res) => {
+      data._rev = res._rev;
+      return data;
+    });
   }
 
 }

@@ -9,7 +9,7 @@ const httpError = require('http-errors');
 const Promise = require('bluebird');
 const moment = require('moment');
 
-var Redis = require('ioredis');
+const Redis = require('ioredis');
 
 const NoSQL = require('../');
 const Accessor = NoSQL.Accessor;
@@ -51,26 +51,42 @@ class IORedis extends NoSQL {
 class IORedisAccessor extends Accessor {
 
   /**
-   * Save data to DB with a given id.
-   *
-   * Result is a promise with `[id, rev]` or an error.
-   */
-  saveWithId(id, data, options) {
-    const key = this.modelName + ':' + id;
-    return this.connection.call('hmset', [key, data]).return([id, null]);
-  }
-
-  /**
    * Save data to DB without a given id.
    *
    * Result is a promise with `[id, rev]` or an error.
    */
-  saveWithoutId(data, options) {
+  postWithoutId(data, options) {
     // Generate ID.
     // Only works for the tests.
     const now = moment();
     const id = now.second() * 1000000 + now.millisecond() * 1000 + Math.floor(Math.random() * 1000);
-    return this.saveWithId(id, data, options);
+    return this.postWithId(id, data, options);
+  }
+
+  /**
+   * Save data to DB with a given id.
+   *
+   * Result is a promise with `[id, rev]` or an error.
+   */
+  postWithId(id, data, options) {
+    const key = this.modelName + ':' + id;
+    return this.exists(key).then((exists) => {
+      // To satisfy the tests from `loopback-datasource-juggler`.
+      if (exists) {
+        return Promise.reject(httpError(409, 'Conflict: duplicate id'));
+      }
+      return this.connection.call('hmset', [key, data]).return([id, null]);
+    });
+  }
+
+  /**
+   * Save data to DB with a given id.
+   *
+   * Result is a promise with `[id, rev]` or an error.
+   */
+  putWithId(id, data, options) {
+    const key = this.modelName + ':' + id;
+    return this.connection.call('hmset', [key, data]).return([id, null]);
   }
 
   /**
@@ -78,7 +94,7 @@ class IORedisAccessor extends Accessor {
    *
    * Result is a promise with whatever or an error.
    */
-  destroyById(id, data, options) {
+  destroyById(id, options) {
     const key = this.modelName + ':' + id;
     return this.connection.call('del', key, options);
   }
@@ -90,7 +106,8 @@ class IORedisAccessor extends Accessor {
    */
   findById(id, options) {
     const key = this.modelName + ':' + id;
-    return this.exists(id).then((exists) => {
+    // `hgetall` cannot tell if it exists.
+    return this.exists(key).then((exists) => {
       if (!exists) {
         return Promise.reject(httpError(404));
       }
@@ -115,8 +132,8 @@ class IORedisAccessor extends Accessor {
   /**
    * Helper.
    */
-  exists(id) {
-    return this.connection.call('exists', this.modelName + ':' + id).then(Boolean);
+  exists(key, options) {
+    return this.connection.call('exists', key).then(Boolean);
   }
 
   /**
