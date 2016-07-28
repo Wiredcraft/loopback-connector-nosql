@@ -1,6 +1,6 @@
 {
   "name": "loopback-connector-nosql",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "The connectors can be further abstracted, assuming it's connecting to a NoSQL DB.",
   "author": {
     "name": "Wiredcraft",
@@ -35,7 +35,7 @@
     "not-empty-object": "^0.1.0"
   },
   "devDependencies": {
-    "coveralls": "^2.11.11",
+    "coveralls": "^2.11.12",
     "http-errors": "^1.5.0",
     "ioredis": "^2.2.0",
     "istanbul": "^0.4.4",
