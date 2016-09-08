@@ -8,7 +8,7 @@ const randexp = require('randexp').randexp;
 const DataSource = require('loopback-datasource-juggler').DataSource;
 const Connector = require('../examples/leveldb.max');
 
-describe('LevelDB connector', function() {
+describe('LevelDB connector with all hooks implemented', function() {
 
   let ds;
   let connector;
