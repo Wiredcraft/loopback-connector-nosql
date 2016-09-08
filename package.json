@@ -43,12 +43,12 @@
     "level": "^1.4.0",
     "leveldown": "^1.4.6",
     "loopback-datasource-juggler": "^2.47.0",
-    "mocha": "^2.5.3",
+    "mocha": "^3.0.2",
     "nano": "^6.2.0",
     "node-uuid": "^1.4.7",
     "randexp": "^0.4.3",
     "rc": "^1.0.0",
-    "should": "^10.0.0",
+    "should": "^11.1.0",
     "stream-to-array": "^2.3.0"
   },
   "scripts": {
