@@ -42,7 +42,7 @@
     "jscs": "^3.0.7",
     "level": "^1.4.0",
     "leveldown": "^1.4.6",
-    "loopback-datasource-juggler": "^2.50.0",
+    "loopback-datasource-juggler": "^2.51.0",
     "mocha": "^3.0.2",
     "nano": "^6.2.0",
     "node-uuid": "^1.4.7",
