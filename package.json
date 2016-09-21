@@ -31,7 +31,7 @@
     "joi": "^9.0.4",
     "loopback-connector": "^2.4.0",
     "loopback-filters": "^0.1.2",
-    "moment": "^2.14.1",
+    "moment": "^2.15.1",
     "not-empty-object": "^0.1.0"
   },
   "devDependencies": {
