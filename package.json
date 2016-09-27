@@ -41,7 +41,7 @@
     "istanbul": "^0.4.5",
     "jscs": "^3.0.7",
     "level": "^1.4.0",
-    "leveldown": "^1.4.6",
+    "leveldown": "^1.5.0",
     "loopback-datasource-juggler": "^2.50.0",
     "mocha": "^3.0.2",
     "nano": "^6.2.0",
