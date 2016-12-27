@@ -20,3 +20,7 @@ test-cov: lint
 test-coveralls: test-cov
 	@cat ./coverage/lcov.info | $(COVERALLS) --verbose
 .PHONY: lint test test-cov test-coveralls
+
+start-dev:
+	@NODE_ENV=development $(DEBUG) ./dockers/start.sh
+.PHONY: start-dev
