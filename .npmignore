@@ -5,8 +5,10 @@
 *.lock
 
 /backup
+/dockers
 /examples
 /test
+/Makefile
 
 # Logs
 logs
