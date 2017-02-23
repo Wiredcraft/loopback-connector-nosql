@@ -1,6 +1,6 @@
 {
   "name": "loopback-connector-nosql",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "The connectors can be further abstracted, assuming it's connecting to a NoSQL DB.",
   "author": {
     "name": "Wiredcraft",
