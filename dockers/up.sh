@@ -2,8 +2,7 @@
 set -ev
 
 # Require some environment variables. Examples:
-# export NODE_ENV="development"
-
+NODE_ENV="development"
 pushd `dirname $0`
 DIR=`pwd`
 popd

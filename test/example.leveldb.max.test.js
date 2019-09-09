@@ -32,8 +32,9 @@ describe('LevelDB connector with all hooks implemented', function() {
 
   after(function(done) {
     connector.connect().then(function(db) {
+      const location = db.db.db.location;
       return connector.disconnect().then(function() {
-        leveldown.destroy(db.location, done);
+        leveldown.destroy(location, done);
       });
     }).catch(done);
   });
