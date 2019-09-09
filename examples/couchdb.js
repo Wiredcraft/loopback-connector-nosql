@@ -28,7 +28,6 @@ function generateCouchDBURL(options) {
  * Implement NoSQL connector.
  */
 class CouchDB extends NoSQL {
-
   /**
    * To satisfy the tests from `loopback-datasource-juggler`.
    */
@@ -61,14 +60,12 @@ class CouchDB extends NoSQL {
     this._db = null;
     return Promise.resolve(true);
   }
-
 }
 
 /**
  * Implement Accessor.
  */
 class CouchDBAccessor extends Accessor {
-
   /**
    * Save data to DB without a given id.
    *
@@ -203,7 +200,6 @@ class CouchDBAccessor extends Accessor {
       return data;
     });
   }
-
 }
 
 // Export initializer.

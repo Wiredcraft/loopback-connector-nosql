@@ -36,11 +36,15 @@
     "param-injection": "^0.1.0"
   },
   "devDependencies": {
+    "@commitlint/cli": "^8.1.0",
+    "@commitlint/config-conventional": "^8.1.0",
     "coveralls": "^3.0.6",
+    "eslint": "^6.3.0",
+    "eslint-config-wcl-backend": "^0.3.0",
     "http-errors": "^1.6.1",
+    "husky": "^3.0.5",
     "ioredis": "^4.14.0",
     "istanbul": "^0.4.5",
-    "jscs": "^3.0.7",
     "level": "^5.0.1",
     "leveldown": "^5.2.0",
     "loopback-datasource-juggler": "^4.12.1",
@@ -53,6 +57,10 @@
     "stream-to-array": "^2.3.0"
   },
   "scripts": {
-    "test": "make test"
+    "lint": "eslint . --fix",
+    "test": "make test",
+    "commitmsg": "commitlint -e $GIT_PARAMS",
+    "precommit": "make lint",
+    "prepush": "make lint"
   }
 }

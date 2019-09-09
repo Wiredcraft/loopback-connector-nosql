@@ -7,7 +7,6 @@ const DataSource = require('loopback-datasource-juggler').DataSource;
 const Connector = require('../examples/couchdb');
 
 describe('CouchDB connector', function() {
-
   let ds;
   let connector;
 
@@ -29,7 +28,6 @@ describe('CouchDB connector', function() {
   });
 
   before(function(done) {
-    getSchema({});
     connector._db.call('create', connector.settings.database, done);
   });
 
@@ -39,5 +37,4 @@ describe('CouchDB connector', function() {
 
   require('loopback-datasource-juggler/test/datatype.test.js');
   require('loopback-datasource-juggler/test/manipulation.test.js');
-
 });

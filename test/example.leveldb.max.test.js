@@ -9,7 +9,6 @@ const DataSource = require('loopback-datasource-juggler').DataSource;
 const Connector = require('../examples/leveldb.max');
 
 describe('LevelDB connector with all hooks implemented', function() {
-
   let ds;
   let connector;
 
@@ -41,5 +40,4 @@ describe('LevelDB connector with all hooks implemented', function() {
 
   require('loopback-datasource-juggler/test/datatype.test.js');
   require('loopback-datasource-juggler/test/manipulation.test.js');
-
 });

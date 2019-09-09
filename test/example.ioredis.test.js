@@ -6,7 +6,6 @@ const DataSource = require('loopback-datasource-juggler').DataSource;
 const Connector = require('../examples/ioredis');
 
 describe('IORedis connector', function() {
-
   let ds;
   let connector;
 
@@ -35,5 +34,4 @@ describe('IORedis connector', function() {
 
   require('loopback-datasource-juggler/test/datatype.test.js');
   require('loopback-datasource-juggler/test/manipulation.test.js');
-
 });

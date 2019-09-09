@@ -18,7 +18,6 @@ const Accessor = NoSQL.Accessor;
  * Implement NoSQL connector.
  */
 class IORedis extends NoSQL {
-
   /**
    * To satisfy the tests from `loopback-datasource-juggler`.
    */
@@ -42,14 +41,12 @@ class IORedis extends NoSQL {
   _disconnect(redis) {
     return redis.disconnect();
   }
-
 }
 
 /**
  * Implement Accessor.
  */
 class IORedisAccessor extends Accessor {
-
   /**
    * Save data to DB without a given id.
    *
@@ -207,7 +204,6 @@ class IORedisAccessor extends Accessor {
     }
     return data;
   }
-
 }
 
 // Export initializer.

@@ -20,7 +20,6 @@ const Accessor = NoSQL.Accessor;
  * Implement NoSQL connector.
  */
 class LevelDB extends NoSQL {
-
   /**
    * To satisfy the tests from `loopback-datasource-juggler`.
    */
@@ -46,14 +45,12 @@ class LevelDB extends NoSQL {
   _disconnect(leveldb) {
     return leveldb.closeAsync();
   }
-
 }
 
 /**
  * Implement Accessor.
  */
 class LevelDBAccessor extends Accessor {
-
   /**
    * Save data to DB without a given id.
    *
@@ -164,7 +161,6 @@ class LevelDBAccessor extends Accessor {
     }
     return data;
   }
-
 }
 
 // Export initializer.
