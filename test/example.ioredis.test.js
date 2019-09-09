@@ -11,15 +11,12 @@ describe('IORedis connector', function() {
 
   before(function() {
     const config = {};
-    global.getDataSource = global.getSchema = function(customConfig) {
-      if (ds) {
-        return ds;
-      }
-      ds = new DataSource(Connector, Object.assign({}, config, customConfig));
-      ds.log = function(a) {
-        console.log(a);
-      };
-      connector = ds.connector;
+    ds = new DataSource(Connector, Object.assign({}, config));
+    ds.log = function(a) {
+      console.log(a);
+    };
+    connector = ds.connector;
+    global.getDataSource = global.getSchema = function() {
       return ds;
     };
   });

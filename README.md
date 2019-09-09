@@ -12,11 +12,11 @@ The connectors can be further abstracted, assuming it's connecting to a NoSQL DB
 
 ```bash
 # Docker Up
-./docker/up.sh
+./dockers/up.sh
 
 # Test
 yarn test
 
 # Docker Down
-./docker/down.sh
+./dockers/down.sh
 ```

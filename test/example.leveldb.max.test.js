@@ -16,15 +16,12 @@ describe('LevelDB connector with all hooks implemented', function() {
     const config = {
       database: path.resolve(__dirname, randexp(/^[a-z]{16}$/))
     };
-    global.getDataSource = global.getSchema = function(customConfig) {
-      if (ds) {
-        return ds;
-      }
-      ds = new DataSource(Connector, Object.assign({}, config, customConfig));
-      ds.log = function(a) {
-        console.log(a);
-      };
-      connector = ds.connector;
+    ds = new DataSource(Connector, Object.assign({}, config));
+    ds.log = function(a) {
+      console.log(a);
+    };
+    connector = ds.connector;
+    global.getDataSource = global.getSchema = function() {
       return ds;
     };
   });
