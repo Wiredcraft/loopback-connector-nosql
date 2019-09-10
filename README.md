@@ -11,14 +11,12 @@ The connectors can be further abstracted, assuming it's connecting to a NoSQL DB
 - Run the following to start the services:
 
 ```bash
-# Start
-make start-dev
+# Docker Up
+./dockers/up.sh
 
-# Stop
-cd dockers/development
-docker-compose stop
+# Test
+yarn test
 
-# Down
-cd dockers/development
-docker-compose down
+# Docker Down
+./dockers/down.sh
 ```

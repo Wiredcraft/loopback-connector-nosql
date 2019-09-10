@@ -9,8 +9,8 @@ branches:
   only:
     - master
 node_js:
-  - "6"
-  - "4"
+  - "8"
+  - "10"
 services:
   - couchdb
   - redis-server

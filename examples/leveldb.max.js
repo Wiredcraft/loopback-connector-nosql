@@ -22,7 +22,6 @@ const Accessor = NoSQL.Accessor;
  * Implement NoSQL connector.
  */
 class LevelDB extends NoSQL {
-
   /**
    * To satisfy the tests from `loopback-datasource-juggler`.
    */
@@ -48,7 +47,6 @@ class LevelDB extends NoSQL {
   _disconnect(leveldb) {
     return leveldb.closeAsync();
   }
-
 }
 
 /**
@@ -57,7 +55,6 @@ class LevelDB extends NoSQL {
  * With all the hooks implemented.
  */
 class LevelDBAccessor extends Accessor {
-
   /**
    * Save data to DB without a given id.
    *
@@ -121,6 +118,10 @@ class LevelDBAccessor extends Accessor {
         data = JSON.parse(data);
       }
       return data;
+    }).catch(err => {
+      // See level-error https://github.com/Level/errors#notfounderror
+      if (err.status === 404) return Promise.reject(httpError(404));
+      throw err;
     });
   }
 
@@ -133,7 +134,7 @@ class LevelDBAccessor extends Accessor {
     return this.connection.then((db) => {
       return toArray(db.createReadStream());
     }).filter((res) => {
-      return ids.indexOf(parseInt(res.key)) > -1;
+      return ids.map(id => String(id)).indexOf(res.key) > -1;
     }).map((res) => {
       return [res.key, res.value];
     });
@@ -202,7 +203,6 @@ class LevelDBAccessor extends Accessor {
     }
     return data;
   }
-
 }
 
 // Export initializer.

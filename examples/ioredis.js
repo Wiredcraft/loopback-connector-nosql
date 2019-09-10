@@ -18,7 +18,6 @@ const Accessor = NoSQL.Accessor;
  * Implement NoSQL connector.
  */
 class IORedis extends NoSQL {
-
   /**
    * To satisfy the tests from `loopback-datasource-juggler`.
    */
@@ -42,14 +41,12 @@ class IORedis extends NoSQL {
   _disconnect(redis) {
     return redis.disconnect();
   }
-
 }
 
 /**
  * Implement Accessor.
  */
 class IORedisAccessor extends Accessor {
-
   /**
    * Save data to DB without a given id.
    *
@@ -86,7 +83,13 @@ class IORedisAccessor extends Accessor {
    */
   putWithId(id, data, options) {
     const key = this.modelName + ':' + id;
-    return this.connection.call('hmset', [key, data]).return([id, null]);
+    return this.connection.call('hgetall', key).then(hash => {
+      return Promise.map(Object.keys(hash), field => this.connection.call('hdel', [key, field]));
+    }).then(() => {
+      return this.connection.call('hmset', [key, data]).then(res => {
+        return res;
+      }).return([id, null]);
+    });
   }
 
   /**
@@ -121,12 +124,14 @@ class IORedisAccessor extends Accessor {
    * Result is a promise with an array of 0 to many `[id, data]`.
    */
   findAll(options) {
-    return this.connection.call('keys', this.modelName + ':*').map((key) => {
-      const id = key.split(':')[1];
-      return this.findById(id, options).then((data) => {
-        return [id, data];
-      }).catchReturn(false);
-    }).filter(Boolean);
+    return this.connection.call('keys', this.modelName + ':*').then(keys => {
+      return keys.sort().map((key) => {
+        const id = key.split(':')[1];
+        return this.findById(id, options).then((data) => {
+          return [id, data];
+        }).catchReturn(false);
+      }).filter(Boolean);
+    });
   }
 
   /**
@@ -147,6 +152,7 @@ class IORedisAccessor extends Accessor {
       }
       let prop = this.properties[i];
       if (prop == null) {
+        if (typeof data[i] === 'string') continue;
         data[i] = JSON.stringify(data[i]);
         continue;
       }
@@ -207,7 +213,6 @@ class IORedisAccessor extends Accessor {
     }
     return data;
   }
-
 }
 
 // Export initializer.
