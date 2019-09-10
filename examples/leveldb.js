@@ -114,6 +114,10 @@ class LevelDBAccessor extends Accessor {
         data = JSON.parse(data);
       }
       return data;
+    }).catch(err => {
+      // See level-error https://github.com/Level/errors#notfounderror
+      if (err.status === 404) return Promise.reject(httpError(404));
+      throw err;
     });
   }
 
