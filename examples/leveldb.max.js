@@ -130,7 +130,7 @@ class LevelDBAccessor extends Accessor {
     return this.connection.then((db) => {
       return toArray(db.createReadStream());
     }).filter((res) => {
-      return ids.indexOf(parseInt(res.key)) > -1;
+      return ids.map(id => String(id)).indexOf(res.key) > -1;
     }).map((res) => {
       return [res.key, res.value];
     });
