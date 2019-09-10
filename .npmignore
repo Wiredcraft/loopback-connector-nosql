@@ -5,10 +5,10 @@
 *.lock
 
 /backup
-/benchmarks
 /dockers
-/example
+/examples
 /test
+/Makefile
 
 # Logs
 logs
@@ -27,6 +27,7 @@ lib-cov
 
 # Coverage directory used by tools like istanbul
 coverage
+coverage.*
 
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
